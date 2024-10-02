@@ -189,7 +189,8 @@ foreach ($sub in $subs){       
                     
         } #End DiskStateIf
                     
-        $count++        $jobsArray += New-Object PSObject -Property $detail
+        $count++        
+        $jobsArray += New-Object PSObject -Property $detail
          
     } #End ForEachDisk     
     
