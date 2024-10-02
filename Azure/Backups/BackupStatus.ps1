@@ -1,5 +1,5 @@
 param( 
-    [string]$tenantId="5b438694-4d84-4561-8891-13a86a443556",
+    [string]$tenantId="TenantID",
     [string]$file="C:\temp\BackupResults.csv"
 ) 
 $subs = Get-AzSubscription -TenantId $tenantId 

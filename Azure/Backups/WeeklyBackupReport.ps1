@@ -6,7 +6,7 @@
 ##     - Javier Juarez 01/20/2023##  
 ##################################################
 param(        
-    [string]$tenantId="5b438694-4d84-4561-8891-13a86a443556",        
+    [string]$tenantId="TenantID",        
     [string]$file="$Env:temp/VMsAutomaticTaggingResults.csv"
 ) 
 
