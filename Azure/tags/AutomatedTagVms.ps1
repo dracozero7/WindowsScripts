@@ -3,28 +3,9 @@ param(       
     #[string]$file="$Env:temp/VMsAutomaticTaggingResults.csv"    
     [string]$file="c:\temp\VMsAutomaticTaggingResults.csv"
     ) 
-<#region connect to Azure
-$connectionName = "AzureRunAsConnection"
-try {    
-    # Get the connection "AzureRunAsConnection"    
-    $servicePrincipalConnection = Get-AutomationConnection -Name $connectionName    
-    $TenantId = $servicePrincipalConnection.TenantId    
-    $ApplicationId = $servicePrincipalConnection.ApplicationId    
-    $Thumbprint = $servicePrincipalConnection.CertificateThumbprint 
-    Add-AzAccount `        
-        -ServicePrincipal `        
-        -TenantId $TenantId `        
-        -ApplicationId $ApplicationId `        
-        -CertificateThumbprint $Thumbprint >$null
-    } catch {    
-     if (!$servicePrincipalConnection) {        
-        $ErrorMessage = "Connection $connectionName not found."        
-        throw $ErrorMessage    
-    } else {        
-        Write-Error -Message $_.Exception        
-        throw $_.Exception    
-    }
-}#>
+
+#region connect to Azure
+connect-azaccount -Identity
 
 Function Send-Email {    
     param (        
