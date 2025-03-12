@@ -3,7 +3,9 @@ param(
     [string]$file="C:\temp\BackupResults.csv"
 ) 
 $subs = Get-AzSubscription -TenantId $tenantId 
-$vmobjs = @()foreach ($sub in $subs){ 
+$vmobjs = @()
+
+foreach ($sub in $subs){ 
     Set-AzContext -SubscriptionId $sub.SubscriptionId 
     #Obtaining all VMs in subscription and Itarating through all of them    
     $vms = Get-AzVM 
