@@ -32,7 +32,10 @@ foreach ($sub in $subs) {
             'Version' = $vm.StorageProfile.ImageReference.Version
             'RAMinMB' = $null
             'CPUCores' = $null
-            'Tags' = $null
+            'VM_Tags' = $null
+            'Ddrive' = $null
+            'Backup' = $null
+            'BK_Vault' = $null
         }
     }
 
@@ -43,9 +46,23 @@ foreach ($sub in $subs) {
     $vmInfo.RAMinMB = $sizedetails.MemoryInMB
     $vmInfo.CPUCores = $sizedetails.NumberOfCores
 
-    $vmInfo.Tags = ($vm.Tags | Out-String)
+    $vmInfo.Tags = ($vm | Select-Object -ExpandProperty Tags | converto-json).Replace("{","").Replace("}","").Replace("`"","").Replace("  ","").Trim()
+
+    $bkstatus = Get-AzRecoveryServicesBackupStatus -Name $vm.Name -ResourceGroupName $vm.ResourceGroupName -Type AzureVM
+
+    #If the value of the backedup is false then saving its not protected, else specify otherwise
+    if ($bkstatus.BackedUp -eq $false) {
+        $vmInfo.Backup = "False"
+        $vmInfo.BK_Vault = "N/A"
+    } else {
+        $vmInfo.Backup = "True"
+        $vmInfo.BK_Vault = $bkstatus.VaultId.Split('/')[-1]
+    }
 
     $vmobjs += $vmInfo
 
     Write-Host $vmInfo.Subscription $vmInfo.VmName
 }
+
+$vmobjs | Select-Object Name, ResourceGroup, Subscription, Location, ComputerName, IpAddress, Status, ProvisioningState, Offer, Publisher, SKU, Version, VMSize, RAMinMB, CPUCores, Ddrive, VM_Tags, Backup, BK_Vault | Export-Csv -NoTypeInformation -Path $file
+Write-Host "VM list written to $file"
